@@ -45,8 +45,8 @@ pub fn arrange(self: *const Self, output: *Output) void {
     const col_num: i32 = @intFromFloat(@ceil(@sqrt(@as(f64, @floatFromInt(windows.items.len)))));
     const row_num: i32 = @intFromFloat(@ceil(@as(f32, @floatFromInt(windows.items.len)) / @as(f32, @floatFromInt(col_num))));
     const available_width, const available_height = blk: {
-        const width = output.exclusive_width() -| 2*self.outer_gap;
-        const height = output.exclusive_height() -| 2*self.outer_gap;
+        const width = @max(0, output.exclusive_width() - 2*self.outer_gap);
+        const height = @max(0, output.exclusive_height() - 2*self.outer_gap);
         break :blk switch (self.direction) {
             .horizontal => .{ width, height },
             .vertical => .{ height, width },
