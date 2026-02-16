@@ -373,8 +373,8 @@ fn wrap_cursor(self: *Self, dest: union(enum) { window: *Window, output: *Output
                 const x = window.x + @divFloor(window.width, 2);
                 const y = window.y + @divFloor(window.height, 2);
                 break :blk .{
-                    output.exclusive_x() + @min(output.exclusive_width(), x),
-                    output.exclusive_y() + @min(output.exclusive_height(), y),
+                    output.exclusive_x() + @max(0, @min(output.exclusive_width(), x)),
+                    output.exclusive_y() + @max(0, @min(output.exclusive_height(), y)),
                 };
             } else return;
         },
