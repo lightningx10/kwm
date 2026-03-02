@@ -561,7 +561,9 @@ fn handle_actions(self: *Self) void {
                     if (output.current_layout() == .tile) {
                         switch (data.change) {
                             .increase => config.layout.tile.nmaster += 1,
-                            .decrease => config.layout.tile.nmaster = @max(0, config.layout.tile.nmaster-1),
+                            .decrease => if (config.layout.tile.nmaster > 1) {
+                                config.layout.tile.nmaster = @max(0, config.layout.tile.nmaster-1);
+                            }
                         }
                     }
                 }
