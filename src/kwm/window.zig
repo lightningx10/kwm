@@ -136,10 +136,23 @@ pub fn create(rwm_window: *river.WindowV1, output: ?*Output) !*Self {
 pub fn destroy(self: *Self) void {
     defer log.debug("<{*}> destroyed", .{ self });
 
+    const context = Context.get();
+
+    {
+        var it = context.seats.safeIterator(.forward);
+        while (it.next()) |seat| {
+            switch (seat.previous_focused) {
+                .window => |window| if (self == window) {
+                    seat.previous_focused = .none;
+                },
+                else => {}
+            }
+        }
+    }
+
     self.set_former_output(null);
 
     if (self.is_terminal) {
-        const context = Context.get();
         context.unregister_terminal(self);
     }
     self.unswallow();

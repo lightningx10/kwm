@@ -77,6 +77,20 @@ pub fn create(
 pub fn destroy(self: *Self) void {
     defer log.debug("<{*}> destroyed", .{ self });
 
+    const context = Context.get();
+
+    {
+        var it = context.seats.safeIterator(.forward);
+        while (it.next()) |seat| {
+            switch (seat.previous_focused) {
+                .output => |output| if (self == output) {
+                    seat.previous_focused = .none;
+                },
+                else => {}
+            }
+        }
+    }
+
     self.set_name(null);
 
     self.link.remove();
