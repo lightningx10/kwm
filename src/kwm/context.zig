@@ -399,7 +399,7 @@ pub fn update_bar_status(self: *Self) void {
 
 pub fn handle_signal(self: *Self, sig: i32) void {
     switch (sig) {
-        posix.SIG.INT, posix.SIG.TERM, posix.SIG.QUIT => self.quit(),
+        posix.SIG.INT, posix.SIG.TERM, posix.SIG.QUIT => self.quit(false),
         posix.SIG.CHLD => {
             while (true) {
                 const res = utils.waitpid(-1, posix.W.NOHANG) catch |err| {
@@ -415,10 +415,16 @@ pub fn handle_signal(self: *Self, sig: i32) void {
 }
 
 
-pub fn quit(self: *Self) void {
-    log.debug("quit kwm", .{});
+pub fn quit(self: *Self, exit_session: bool) void {
+    if (exit_session) {
+        log.debug("exit session", .{});
 
-    self.running = false;
+        self.rwm.exitSession();
+    } else {
+        log.debug("quit kwm", .{});
+
+        self.running = false;
+    }
 }
 
 

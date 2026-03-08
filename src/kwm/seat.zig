@@ -398,8 +398,8 @@ fn handle_actions(self: *Self) void {
         const action = self.unhandled_actions.items[i];
 
         switch (action) {
-            .quit => {
-                context.quit();
+            .quit => |data| {
+                context.quit(data.exit_session);
             },
             .close => {
                 if (context.focused_window()) |window| {

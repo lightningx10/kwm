@@ -57,8 +57,6 @@ You can declare only the configuration items that need to override compile time 
 
 Run `kwm` in your river init file or run with `river -c kwm`.
 
-It should be noted that the `quit` action only quit the kwm but not quit river session. It allow you restart kwm directly. If you want to quit river session, try to use `Ctrl+Alt+Delete`.
-
 You could remap keyboard keys(e.g. swap CapsLock with Escape) by setting the XKB layout rules before starting river:
 ```sh
 export XKB_DEFAULT_OPTIONS=caps:swapescape,altwin:swap_alt_win

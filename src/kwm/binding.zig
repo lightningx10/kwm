@@ -13,7 +13,7 @@ const MoveResizeStep = union(enum) {
 
 
 pub const Action = union(enum) {
-    quit,
+    quit: struct { exit_session: bool },
     close,
     spawn: struct {
         argv: []const []const u8,
