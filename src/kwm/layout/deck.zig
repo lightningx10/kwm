@@ -48,51 +48,56 @@ pub fn arrange(self: *const Self, output: *Output) void {
             if (!found_stack_top) {
                 found_stack_top = true;
 
-                const master_w, const stack_w = switch (self.master_location) {
-                    .left, .right => .{ @divFloor(w, 2), w - @divFloor(w, 2) - self.inner_gap },
-                    .top, .bottom => .{ @divFloor(h, 2), h - @divFloor(h, 2) - self.inner_gap },
+                const master_size = switch (self.master_location) {
+                    .left, .right => @divFloor(w, 2),
+                    .top, .bottom => @divFloor(h, 2),
+                };
+
+                const stack_size = switch (self.master_location) {
+                    .left, .right => w - master_size - self.inner_gap,
+                    .top, .bottom => h - master_size - self.inner_gap,
                 };
 
                 switch (self.master_location) {
                     .left => {
                         master.unbound_move(self.outer_gap, self.outer_gap);
-                        master.unbound_resize(master_w, h);
+                        master.unbound_resize(master_size, h);
 
                         window.unbound_move(
-                            self.outer_gap + master_w + self.inner_gap,
+                            self.outer_gap + master_size + self.inner_gap,
                             self.outer_gap,
                         );
-                        window.unbound_resize(stack_w, h);
+                        window.unbound_resize(stack_size, h);
                     },
                     .right => {
                         master.unbound_move(
-                            self.outer_gap + stack_w + self.inner_gap,
+                            self.outer_gap + stack_size + self.inner_gap,
                             self.outer_gap,
                         );
-                        master.unbound_resize(master_w, h);
+                        master.unbound_resize(master_size, h);
 
                         window.unbound_move(self.outer_gap, self.outer_gap);
-                        window.unbound_resize(stack_w, h);
+                        window.unbound_resize(stack_size, h);
                     },
                     .top => {
                         master.unbound_move(self.outer_gap, self.outer_gap);
-                        master.unbound_resize(h, master_w);
+                        master.unbound_resize(w, master_size);
 
                         window.unbound_move(
                             self.outer_gap,
-                            self.outer_gap + master_w + self.inner_gap,
+                            self.outer_gap + master_size + self.inner_gap,
                         );
-                        window.unbound_resize(h, stack_w);
+                        window.unbound_resize(w, stack_size);
                     },
                     .bottom => {
                         master.unbound_move(
                             self.outer_gap,
-                            self.outer_gap + stack_w + self.inner_gap,
+                            self.outer_gap + stack_size + self.inner_gap,
                         );
-                        master.unbound_resize(h, master_w);
+                        master.unbound_resize(w, master_size);
 
                         window.unbound_move(self.outer_gap, self.outer_gap);
-                        window.unbound_resize(h, stack_w);
+                        window.unbound_resize(w, stack_size);
                     }
                 }
             } else {
