@@ -96,6 +96,7 @@
         // .tile
         // .grid
         // .monocle
+        // .deck
         // .scroller
         .default = .tile,
 
@@ -122,6 +123,16 @@
         .monocle = .{
             .gap = 9,
         },
+        .deck = .{
+            .inner_gap = 12,
+            .outer_gap = 9,
+
+            // .left
+            // .right
+            // .top
+            // .bottom
+            .master_location = .left,
+        },
         .scroller = .{
             .mfact = 0.5,
             .inner_gap = 16,
@@ -142,6 +153,12 @@
             .vertical = "|||",
         },
         .monocle = "[=]",
+        .deck = .{
+            .left = "[D]=",
+            .right = "=[D]",
+            .top = "[D^]",
+            .bottom = "[D_]",
+        },
         .scroller = "[==]",
         .float = "><>",
     },
@@ -616,6 +633,17 @@
                 },
             },
             .{
+                .keysym = "d",
+                .modifiers = .{ .mod4 = true },
+                .event = .{
+                    .click = .{
+                        .pressed = .{
+                            .switch_layout = .{ .layout = .deck },
+                        },
+                    },
+                },
+            },
+            .{
                 .keysym = "m",
                 .modifiers = .{ .mod4 = true },
                 .event = .{
@@ -738,7 +766,7 @@
                 .event = .{
                     .click = .{
                         .pressed = .{
-                            .modify_tile_master_location = .{ .location = .bottom },
+                            .modify_master_location = .{ .location = .bottom },
                         },
                     },
                 },
@@ -749,7 +777,7 @@
                 .event = .{
                     .click = .{
                         .pressed = .{
-                            .modify_tile_master_location = .{ .location = .top },
+                            .modify_master_location = .{ .location = .top },
                         },
                     },
                 },
@@ -760,7 +788,7 @@
                 .event = .{
                     .click = .{
                         .pressed = .{
-                            .modify_tile_master_location = .{ .location = .right },
+                            .modify_master_location = .{ .location = .right },
                         },
                     },
                 },
@@ -771,7 +799,7 @@
                 .event = .{
                     .click = .{
                         .pressed = .{
-                            .modify_tile_master_location = .{ .location = .left },
+                            .modify_master_location = .{ .location = .left },
                         },
                     },
                 },
