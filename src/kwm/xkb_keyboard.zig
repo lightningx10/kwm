@@ -56,6 +56,7 @@ numlock: NumlockState = undefined,
 capslock: CapslockState = undefined,
 layout_index: u32 = undefined,
 layout_name: ?[]const u8 = null,
+keymap: ?Keymap = null,
 
 
 pub fn create(rwm_xkb_keyboard: *river.XkbKeyboardV1) !*Self {
@@ -124,18 +125,23 @@ fn apply_rule(self: *Self, rule: *const Config.XkbKeyboardRule) void {
         if (self.capslock != state) self.set_capslock(state);
     }
 
+    var keymap_updated = false;
     if (rule.keymap) |keymap| blk: {
+        if (self.keymap != null and Config.deep_equal(Keymap, &self.keymap.?, &keymap)) break :blk;
+
         self.set_keymap(&keymap) catch |err| {
             log.err("<{*}> set keymap failed: {}", .{ self, err });
             break :blk;
         };
 
-        if (rule.layout) |layout| {
-            if (switch (layout) {
-                .index => |index| index != self.layout_index,
-                .name => |name| self.layout_name == null or mem.order(u8, name, self.layout_name.?) != .eq,
-            }) self.set_layout(layout);
-        }
+        keymap_updated = true;
+    }
+
+    if (rule.layout) |layout| {
+        if (keymap_updated or switch (layout) {
+            .index => |index| index != self.layout_index,
+            .name => |name| if (self.layout_name) |layout_name| !mem.eql(u8, layout_name, name) else true,
+        }) self.set_layout(layout);
     }
 }
 
@@ -249,6 +255,7 @@ fn set_keymap(self: *Self, keymap: *const Keymap) !void {
         };
         defer rwm_xkb_keymap.destroy();
 
+        self.keymap = keymap.*;
         self.rwm_xkb_keyboard.setKeymap(rwm_xkb_keymap);
     } else return error.MissingRiverXkbConfig;
 }
