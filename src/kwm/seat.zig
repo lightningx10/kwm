@@ -521,7 +521,7 @@ fn handle_actions(self: *Self) void {
             },
             .zoom => |data| {
                 if (context.focused_window()) |window| {
-                    if (window.floating) return;
+                    if (window.floating) continue;
 
                     if (window.output) |output| {
                         switch (output.current_layout()) {
@@ -529,12 +529,12 @@ fn handle_actions(self: *Self) void {
                                 if (!data.swap) {
                                     context.focus(window);
                                     context.shift_to_head(window);
-                                    return;
+                                    continue;
                                 }
 
-                                var master = output.master_window() orelse return;
+                                var master = output.master_window() orelse continue;
                                 var new_master = if (window != master) window
-                                    else context.focused_before(window, true) orelse return;
+                                    else context.focused_before(window, true) orelse continue;
 
                                 // ensure the old master immediately behind the new master in focus_stack
                                 context.focus(master);
@@ -551,14 +551,14 @@ fn handle_actions(self: *Self) void {
             },
             .focus_master_return => {
                 if (context.focused_window()) |window| {
-                    if (window.floating) return;
+                    if (window.floating) continue;
                     if (window.output) |output| {
                         switch (output.current_layout()) {
                             .tile, .deck => {
-                                const master = output.master_window() orelse return;
+                                const master = output.master_window() orelse continue;
                                 context.focus(
                                     if (window != master) master
-                                    else context.focused_before(window, true) orelse return,
+                                    else context.focused_before(window, true) orelse continue,
                                 );
                             },
                             else => {}
