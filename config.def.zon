@@ -479,7 +479,7 @@
                 .event = .{
                     .click = .{
                         .pressed = .{
-                            .focus_iter = .{ .direction = .forward, .skip_floating = true },
+                            .focus_iter = .{ .direction = .forward, .skip = .floating },
                         },
                     },
                 },
@@ -490,7 +490,7 @@
                 .event = .{
                     .click = .{
                         .pressed = .{
-                            .focus_iter = .{ .direction = .reverse, .skip_floating = true },
+                            .focus_iter = .{ .direction = .reverse, .skip = .floating },
                         },
                     },
                 },

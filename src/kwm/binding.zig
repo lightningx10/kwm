@@ -23,7 +23,7 @@ pub const Action = union(enum) {
     },
     focus_iter: struct {
         direction: types.Direction,
-        skip_floating: bool = false,
+        skip: types.WindowIterSkip = .none,
     },
     focus_output_iter: struct {
         direction: types.Direction,

@@ -458,7 +458,7 @@ fn handle_actions(self: *Self) void {
                 context.switch_mode(data.mode);
             },
             .focus_iter => |data| {
-                context.focus_iter(data.direction, data.skip_floating);
+                context.focus_iter(data.direction, data.skip);
             },
             .focus_output_iter => |data| {
                 context.focus_output_iter(data.direction);
