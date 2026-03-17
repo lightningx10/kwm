@@ -1,6 +1,6 @@
 # kwm - kewuaa's Window Manager
 
-A window manager based on River Wayland Compositor, written in Zig
+A window manager based on [river] >= 0.4.x (with river-window-management-v1 protocol), written in Zig
 
 ![tile](./images/tile.png)
 
@@ -9,11 +9,6 @@ A window manager based on River Wayland Compositor, written in Zig
 ![monocle](./images/monocle.png)
 
 ![scroller](./images/scroller.png)
-
-## Requirements
-
-- Zig 0.15
-- [river] >= 0.4.x (with river-window-management-v1 protocol)
 
 ## Features
 
@@ -41,7 +36,17 @@ sticky
 
 See the default [configuration](./config.def.zon) file for detailed features.
 
+## Dependencies
+
+- wayland (libwayland-client)
+- xkbcommon
+- pixman (if bar enabled)
+- fcft (if bar enabled)
+- wayland-protocols (compile only)
+
 ## Build
+
+Requires zig 0.15.x.
 
 ```zig
 zig build -Doptimize=ReleaseSafe
