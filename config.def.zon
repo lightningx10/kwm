@@ -940,6 +940,21 @@
                 .event = .{ .pressed = .pointer_resize },
             },
         },
+        // other unmentioned actions:
+        //      group: run multiple actions in sequence
+        //         .event = .{
+        //             .click = .{
+        //                 .pressed = .{
+        //                     .group = .{
+        //                         .actions = .{
+        //                             action1,
+        //                             action2,
+        //                             ...
+        //                         },
+        //                     },
+        //                 },
+        //             },
+        //         }
     },
 
     // rule part
