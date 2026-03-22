@@ -32,7 +32,7 @@ pub const XkbKeyboardRule = rule.XkbKeyboard;
 
 fn enum_struct(comptime E: type, comptime T: type) type {
     const info = @typeInfo(E);
-    if (info != .@"enum") @panic("E is needed to be a enum");
+    if (info != .@"enum") @compileError("E is needed to be a enum");
 
     var fields: [info.@"enum".fields.len]std.builtin.Type.StructField = undefined;
     for (0.., info.@"enum".fields) |i, field| {
@@ -102,7 +102,7 @@ fn make_optional(comptime T: type) type {
 
 fn make_fields_optional(comptime T: type) type {
     const info = @typeInfo(T);
-    if (info != .@"struct") @panic("T is needed to be a struct");
+    if (info != .@"struct") @compileError("T is needed to be a struct");
 
     var fields: [info.@"struct".fields.len]std.builtin.Type.StructField = undefined;
     for (0.., info.@"struct".fields) |i, field| {
@@ -132,7 +132,7 @@ fn make_fields_optional(comptime T: type) type {
 
 fn field_mask(comptime T: type) type {
     const info = @typeInfo(T);
-    if (info != .@"struct") @panic("T is needed to be a struct");
+    if (info != .@"struct") @compileError("T is needed to be a struct");
 
     var fields: [info.@"struct".fields.len]std.builtin.Type.StructField = undefined;
     for (0.., info.@"struct".fields) |i, field| {
