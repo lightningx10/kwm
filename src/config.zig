@@ -183,12 +183,11 @@ pub inline fn deinit() void {
 pub fn reload() meta.field_mask(Self) {
     log.debug("reload user config", .{});
 
+    var mask: meta.field_mask(Self) = .{};
     if (try_load_user_config()) |cfg| {
-        var mask: meta.field_mask(Self) = .{};
-
-        const info = @typeInfo(Self).@"struct";
+        const struct_info = @typeInfo(Self).@"struct";
         if (user_config) |old_cfg| {
-            inline for (info.fields) |field| {
+            inline for (struct_info.fields) |field| {
                 if (!meta.deep_equal(
                     @FieldType(@TypeOf(cfg), field.name),
                     &@field(old_cfg, field.name),
@@ -198,13 +197,13 @@ pub fn reload() meta.field_mask(Self) {
                 }
             }
         } else {
-            inline for (info.fields) |field| {
+            inline for (struct_info.fields) |field| {
                 @field(mask, field.name) = true;
             }
         }
 
         const modified = blk: {
-            inline for (@typeInfo(@TypeOf(mask)).@"struct".fields) |field| {
+            inline for (struct_info.fields) |field| {
                 if (@field(mask, field.name)) {
                     break :blk true;
                 }
@@ -215,14 +214,12 @@ pub fn reload() meta.field_mask(Self) {
         if (modified) {
             free_user_config();
             user_config = cfg;
-
             refresh_config();
         } else {
             meta.zon_free(allocator, cfg);
         }
-
-        return mask;
-    } else return .{};
+    }
+    return mask;
 }
 
 
@@ -273,14 +270,7 @@ fn refresh_config() void {
     log.debug("refresh config", .{});
 
     if (user_config) |cfg| {
-        config = undefined;
-        inline for (@typeInfo(Self).@"struct".fields) |field| {
-            @field(config.?, field.name) = meta.merge(
-                field.type,
-                &@field(default_config, field.name),
-                &@field(cfg, field.name),
-            );
-        }
+        config = meta.override(default_config, cfg);
         log.debug("config: {any}", .{ config.? });
     }
 }

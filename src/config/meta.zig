@@ -140,16 +140,18 @@ pub fn field_mask(comptime T: type) type {
 }
 
 
-pub fn merge(comptime T: type, base: *const T, new: *const make_optional(T)) T {
-    if (new.* == null) return base.*;
-
+pub fn override(base: anytype, new: anytype) @TypeOf(base) {
+    const T = @TypeOf(base);
     var result: T = undefined;
-    const info = @typeInfo(T);
-    switch (info) {
-        .@"struct" => |struct_info| inline for (struct_info.fields) |field| {
-            @field(result, field.name) = merge(field.type, &@field(base.*, field.name), &@field(new.*.?, field.name));
-        },
-        else => result = new.*.?,
+    inline for (@typeInfo(T).@"struct".fields) |field_info| {
+        const new_field = @field(new, field_info.name);
+        const base_field = @field(base, field_info.name);
+        @field(result, field_info.name) =
+            if (new_field == null) base_field
+            else switch (@typeInfo(field_info.type)) {
+                .@"struct" => override(base_field, new_field.?),
+                else => new_field.?,
+            };
     }
     return result;
 }
